@@ -71,7 +71,7 @@ export function ProfileRegistrationForm({
       }
 
       if (!formData.gender) {
-        stageErrors.gender = '性別を選択してください'
+        stageErrors.gender = '性別の選択が必要です'
       }
     }
 
@@ -162,26 +162,41 @@ export function ProfileRegistrationForm({
     setIsLoading(true)
 
     try {
-      await createOrUpdateProfile({
-        nickname: formData.nickname,
+      // 入力データのサニタイゼーション
+      const sanitizedData = {
+        nickname: formData.nickname.trim(),
         gender: formData.gender as 'male' | 'female' | 'other',
         birthDate: formData.birthDate,
         age: formData.age!,
-        location: formData.location,
-        bio: formData.bio
-      })
+        location: formData.location.trim(),
+        bio: formData.bio.trim()
+      }
+
+      await createOrUpdateProfile(sanitizedData)
 
       toast({
         title: 'プロフィール登録完了',
-        description: 'プロフィールの登録が完了しました。'
+        description: 'プロフィールの登録が完了しました。本人確認のために身分証明書の提出をお願いします。'
       })
 
       router.push('/dashboard')
     } catch (error) {
       console.error('Profile registration error:', error)
+      
+      // エラーの詳細に応じたメッセージ
+      let errorMessage = 'プロフィールの登録に失敗しました。再度お試しください。'
+      
+      if (error instanceof Error) {
+        if (error.message.includes('認証')) {
+          errorMessage = '認証エラーが発生しました。再度ログインしてください。'
+        } else if (error.message.includes('バリデーション')) {
+          errorMessage = '入力内容に問題があります。各項目を確認してください。'
+        }
+      }
+
       toast({
         title: 'エラー',
-        description: 'プロフィールの登録に失敗しました。再度お試しください。',
+        description: errorMessage,
         variant: 'destructive'
       })
     } finally {
@@ -209,6 +224,7 @@ export function ProfileRegistrationForm({
       <div className="space-y-2">
         <Label htmlFor="gender">性別 *</Label>
         <SimpleSelect 
+          id="gender"
           value={formData.gender} 
           onValueChange={(value) => handleInputChange('gender', value)}
           className={errors.gender ? 'border-red-500' : ''}

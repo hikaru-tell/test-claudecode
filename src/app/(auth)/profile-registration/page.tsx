@@ -1,21 +1,9 @@
 'use client'
 
-import { useConvexAuth } from 'convex/react'
 import { ProfileRegistrationForm } from '@/components/profile/ProfileRegistrationForm'
 import { AuthGuard } from '@/components/auth/AuthGuard'
-import { Loader2 } from 'lucide-react'
 
 export default function ProfileRegistrationPage() {
-  const { isLoading } = useConvexAuth()
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    )
-  }
-
   return (
     <AuthGuard>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
