@@ -117,16 +117,19 @@ export function SimpleSelect({
   onValueChange,
   children,
   className,
+  id,
   ...props
 }: {
   value?: string
   onValueChange?: (value: string) => void
   children: React.ReactNode
   className?: string
+  id?: string
 } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <div className="relative">
       <select
+        id={id}
         className={cn(
           'flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none',
           className

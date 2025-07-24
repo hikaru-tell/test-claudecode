@@ -1,7 +1,7 @@
 "use client";
 
-import { useConvexAuth } from "@convex-dev/auth/react";
 import { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
-  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useAuth();
 
   if (isLoading) {
     return (

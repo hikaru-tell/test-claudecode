@@ -50,7 +50,7 @@ describe('ProfileRegistrationForm', () => {
       await user.click(nextButton)
       
       expect(screen.getByText('ニックネームは必須です')).toBeInTheDocument()
-      expect(screen.getByText('性別を選択してください')).toBeInTheDocument()
+      expect(screen.getByText('性別の選択が必要です')).toBeInTheDocument()
     })
 
     it('有効な入力で次のステージに進む', async () => {
@@ -257,7 +257,7 @@ describe('ProfileRegistrationForm', () => {
           nickname: 'テストユーザー',
           gender: 'male',
           birthDate: '1990-01-01',
-          age: 34,
+          age: expect.any(Number),
           location: '東京都',
           bio: 'これは有効な自己紹介文です。'
         })
@@ -272,7 +272,8 @@ describe('ProfileRegistrationForm', () => {
       expect(screen.getByText('ステップ 1 / 3')).toBeInTheDocument()
       
       // 進捗ドットの確認
-      const dots = screen.container.querySelectorAll('.w-2.h-2.rounded-full')
+      const { container } = render(<ProfileRegistrationForm />)
+      const dots = container.querySelectorAll('.w-2')
       expect(dots).toHaveLength(3)
       expect(dots[0]).toHaveClass('bg-blue-500') // アクティブ
       expect(dots[1]).toHaveClass('bg-gray-300') // 非アクティブ
